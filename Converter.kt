@@ -1,48 +1,30 @@
 package converter
 
-import kotlin.math.pow
+import java.math.BigDecimal
+import java.math.BigInteger
 
 class Converter {
-    private fun convertToBase(decimalNumber: Int, base: Int): String {
-//        elegant but "illegal" system
-//        return when (base) {
-//            2 -> decimalNumber.toString(base)
-//            8 -> String.format("%o", decimalNumber)
-//            16 -> Integer.toHexString(decimalNumber).uppercase()
-//            else -> "Invalid base"
-//        }
+    private fun convertToBase(decimalNumber: String, base: Int): String {
         val result = mutableListOf<Char>()
-        var dividend = decimalNumber
-        while (dividend != 0) {
-            result.add((dividend % base).digitToChar(base))
-            dividend /= base
-        }
+        var dividend = BigInteger(decimalNumber)
+        do {
+            result.add((dividend % base.toBigInteger()).toInt().digitToChar(base))
+            dividend /= base.toBigInteger()
+        } while (dividend != BigInteger.ZERO)
         return result.joinToString("").reversed()
     }
 
     private fun convertToDecimal(number: String, base: Int): String {
-        var result = 0
+        var result = BigDecimal.ZERO
         number.toCharArray().reversed().forEachIndexed { index, digit ->
-            result += (base.toDouble().pow(index) * digit.digitToInt(base)).toInt()
+            result += base.toBigDecimal().pow(index) * digit.digitToInt(base).toBigDecimal()
         }
-        return result.toString()
+        return result.toBigInteger().toString()
     }
 
-    fun from() {
-        print("Enter number in decimal system: ")
-        val decimal = readln().toInt()
-        print("Enter target base: ")
-        val base = readln().toInt()
-
-        print("Conversion result: ${convertToBase(decimal, base)}\n\n")
-    }
-
-    fun to() {
-        print("Enter source number: ")
-        val number = readln()
-        print("Enter source base: ")
-        val base = readln().toInt()
-
-        print("Conversion to decimal result: ${convertToDecimal(number, base)}\n\n")
+    fun convert(number: String, sourceBase: Int, targetBase: Int) {
+        val decimalNumber = convertToDecimal(number, sourceBase)
+        val convertedNumber = convertToBase(decimalNumber, targetBase)
+        print("Conversion result: $convertedNumber\n\n")
     }
 }
