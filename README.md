@@ -1,2 +1,2 @@
 # Number-Base-Converter
-Kotlin Basics Number Base Converter project
+JetBrains Academy Kotlin Basics Number Base Converter project
